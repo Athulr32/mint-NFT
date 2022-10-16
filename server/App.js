@@ -6,8 +6,10 @@ var fs = require('fs');
 var cors = require('cors')
 const path = require("path")
 
+require('dotenv').config()
 const pinataSDK = require('@pinata/sdk');
-const pinata = pinataSDK('2a01136173e3bc6260cc', '18e7a3701bf93085e5cacbe9b87dcbdca23d8c83d65965f7ee4b9661ccddafbe');
+
+const pinata = pinataSDK(process.env.PINNATA_API_KEY, process.env.PINNATA_SECRET_KEY);
 
 app.use(cors());
 app.use(express.json());
