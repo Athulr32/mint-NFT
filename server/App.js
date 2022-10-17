@@ -15,6 +15,51 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+function makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * 
+ charactersLength));
+   }
+   return result;
+}
+
+
+console.log(makeid(5));
+
+function readfile(path) {
+
+    return new Promise(function (resolve, reject) {
+
+        console.log("File read");
+        fs.readFile(path, (err, data) => {
+
+            if (err) reject(err);
+
+            resolve(data)
+        })
+
+
+    })
+}
+
+
+function writefile(path, data) {
+
+    return new Promise(function (resolve, reject) {
+
+        console.log("File write");
+        fs.writeFile(path, data, function (err) {
+            if (err) reject(err)
+            resolve("Success")
+        })
+
+
+    })
+}
+
 app.use("/image", async (req, res) => {
 
     //NFT DETAILS
@@ -22,83 +67,75 @@ app.use("/image", async (req, res) => {
     //NFT IMAGE
     var form = new formidable.IncomingForm();
 
-   form.parse(req, function (err, fields, files) {
-    console.log(fields)
+
+
+
+    form.parse(req, async function (err, fields, files) {
+
+        console.log(fields)
+        const random = makeid(5)
         var oldpath = files.nft.filepath;
+    
+        var newpath = random+ files.nft.originalFilename 
 
-       var newpath = files.nft.originalFilename
-     
+        const data = await readfile(oldpath);
 
-        fs.readFile(oldpath, function (err, data) {
+        await writefile(newpath, data);
+
+        fs.unlink(oldpath, function (err) {
             if (err) throw err;
-            console.log('File read!');
-
-            // Write the file
-            fs.writeFile(newpath, data, function (err) {
-                if (err) throw err;
-
-                console.log('File written!');
-
-                const readableStreamForFile = fs.createReadStream('./'+newpath);
-  
-                pinata.pinFileToIPFS(readableStreamForFile).then((result) => {
-                    //handle results here
-                    console.log(result);
-            
-                    var obj = {
-                        table: []
-                     };
-                
-                     obj.table.push({id: 1, image:"https://gateway.pinata.cloud/ipfs/"+result.IpfsHash});
-            
-                     var json = JSON.stringify(obj);
-            
-                     fs.writeFile('myjsonfile.json', json, 'utf8', (err)=>{
-                        if(err) throw err;
-            
-                        const readableStreamForFile = fs.createReadStream('./myjsonfile.json');
-            
-                        pinata.pinFileToIPFS(readableStreamForFile).then((result) => {
-                            //handle results here
-                            console.log(result);
-            
-                            res.json({ data: result.IpfsHash})
-                        }).catch((err) => {
-                            //handle error here
-                            console.log(err);
-                        });
-            
-                     });
-            
-            
-            
-            
-            
-                }).catch((err) => {
-                    //handle error here
-                    console.log(err);
-                });
-                 
-            
-                });
-
-
-            });
-
-            // Delete the file
-            fs.unlink(oldpath, function (err) {
-                if (err) throw err;
-                console.log('File deleted!');
-            });
+            console.log('Unlinked old path!');
         });
 
-      
- 
     
 
+        const readableStreamForFile = fs.createReadStream('./' + newpath);
+
+        const nftHash = await pinata.pinFileToIPFS(readableStreamForFile);
+
+        console.log(nftHash)
+
+        fs.unlink(newpath, function (err) {
+            if (err) throw err;
+            console.log('Unlinked new path!');
+        });
+
+        var obj = {
+            table: []
+        };
+
+        obj.table.push({ id: 1, image: "https://gateway.pinata.cloud/ipfs/" + nftHash.IpfsHash });
+
+        var json = JSON.stringify(obj);
+
+        const metaDataFile = random + "metadata.json"
+
+        await writefile(metaDataFile, json);
+
+        const readableStreamForFileJSON = fs.createReadStream(`./${metaDataFile}`);
+
+        const metadataHash = await pinata.pinFileToIPFS(readableStreamForFileJSON)
+
+        console.log(metadataHash)
+
+       fs.unlink(metaDataFile, function (err) {
+            if (err) throw err;
+            console.log('Unlinked metaData path!');
+        });
+
+        res.json({ data: metadataHash.IpfsHash })
 
 
- 
+
+    });
+
+
+
+
+
+
+
+
 
 })
 
