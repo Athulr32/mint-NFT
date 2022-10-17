@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import ConnectWallet from './components/ConnectWallet';
 import ABI from './ABI';
@@ -38,16 +37,10 @@ function App() {
         setConnect(true)
       }
 
-
-
     }
-
-
-
 
   return (
     <div>
-
 
       {connect ? <Dashboard address={address} contract={contract} /> : <ConnectWallet connect={connection} />}
 

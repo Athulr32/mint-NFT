@@ -69,5 +69,12 @@ contract FiredGuys is ERC721, ERC721URIStorage, Ownable {
         return _tokenIdCounter.current();
     }
 
+     function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public virtual override {
+        safeTransferFrom(from, to, tokenId, "");
+    }
 
 }

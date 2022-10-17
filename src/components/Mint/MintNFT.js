@@ -15,13 +15,15 @@ function MintNFT({ contract }) {
     const mintToken = async (metadataURI) => {
         console.log("Minting")
 
-        console.log(await mainContract.owner())
+        console.log(mainContract)
+
         const connection = mainContract.connect(signer);
         const addr = connection.address;
         console.log("MEta is",metadataURI)
         const result = await mainContract.payToMint(addr, metadataURI, {
-            value: ethers.utils.parseEther('0.05'),
+      
           });
+
           console.log( await result.wait())
 
     }
