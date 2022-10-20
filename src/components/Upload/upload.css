@@ -1,0 +1,19 @@
+
+.upload{
+
+  width: 700px;
+    left:500px;
+    font-size: 30px;
+    background-color: 	#F5F5F5;
+
+}
+
+.image{
+    display: flex;
+    justify-content: space-around;
+}
+
+
+label{
+    color:white
+}

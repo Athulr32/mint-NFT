@@ -72,7 +72,9 @@ app.use("/image", async (req, res) => {
 
     form.parse(req, async function (err, fields, files) {
 
-        console.log(fields)
+        const name = fields.name;
+        const description = fields.description;
+        console.log(name,description)
         const random = makeid(5)
         var oldpath = files.nft.filepath;
     
@@ -104,7 +106,7 @@ app.use("/image", async (req, res) => {
             table: []
         };
 
-        obj.table.push({ id: 1, image: "https://gateway.pinata.cloud/ipfs/" + nftHash.IpfsHash });
+        obj.table.push({ name: name,description, image: "https://gateway.pinata.cloud/ipfs/" + nftHash.IpfsHash });
 
         var json = JSON.stringify(obj);
 

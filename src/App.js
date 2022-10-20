@@ -7,11 +7,12 @@ import Dashboard from './components/Home/DashBoard';
 
 function App() {
 
-  const contractAddress = "0x8770DF6A6Ac2C80835877155E6132E0068b1c0C3";
+  const contractAddress = "0x5B7565D77377003e013d7D63b6b9C2E0166a2b0F";
 
   const [balance, setBalance] = useState(0);
   const [connect, setConnect] = useState(false)
   const [address, setAddress] = useState("")
+  
   const [contract,setContract] = useState({
     signer:"",
     contract:""
