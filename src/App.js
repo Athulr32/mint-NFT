@@ -1,49 +1,30 @@
 import './App.css';
-import ConnectWallet from './components/ConnectWallet';
-import ABI from './ABI';
-import { ethers } from "ethers";
-import { useState } from 'react';
-import Dashboard from './components/Home/DashBoard';
 
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+
+} from "react-router-dom";
+import App1 from './App1';
+import { useState } from 'react';
+import App2 from './App2';
 function App() {
 
-  const contractAddress = "0x5B7565D77377003e013d7D63b6b9C2E0166a2b0F";
-
-  const [balance, setBalance] = useState(0);
-  const [connect, setConnect] = useState(false)
-  const [address, setAddress] = useState("")
-  
-  const [contract,setContract] = useState({
-    signer:"",
-    contract:""
-  })
-    async function connection() {
-
-      const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-
-      // Prompt user for account connections
-      await provider.send("eth_requestAccounts", []);
-
-      //User
-      const signer = provider.getSigner();
-
-      //Smart contract
-      const contract = new ethers.Contract(contractAddress, ABI, signer);
-
-      const address = await signer.getAddress()
-
-      if (address) {
-        setAddress(address)
-        setContract({contract:contract,signer:signer});
-        setConnect(true)
-      }
-
-    }
 
   return (
     <div>
 
-      {connect ? <Dashboard address={address} contract={contract} /> : <ConnectWallet connect={connection} />}
+      <Router>
+        <Routes>
+          <Route path="/" element={<App1/>} />
+          <Route path="/:id" element={<App2/>} />
+        </Routes>
+      
+      </Router>
+
+
 
     </div>
   );

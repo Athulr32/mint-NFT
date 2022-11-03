@@ -106,7 +106,7 @@ app.use("/image", async (req, res) => {
             table: []
         };
 
-        obj.table.push({ name: name,description, image: "https://gateway.pinata.cloud/ipfs/" + nftHash.IpfsHash });
+        obj.table.push({ name: name,description, image: "https://api.ipfsbrowser.com/ipfs/get.php?hash=" + nftHash.IpfsHash });
 
         var json = JSON.stringify(obj);
 

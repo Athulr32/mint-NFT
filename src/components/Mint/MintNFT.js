@@ -3,7 +3,7 @@ import Upload from "../Upload/Upload";
 
 function MintNFT({ contract,setMintFalse}) {
     const mainContract = contract.contract;
-    const signer = contract.singer
+    const signer = contract.signer
     const file = useRef(null);
     const name = useRef(null)
     const description = useRef(null);
@@ -19,10 +19,11 @@ function MintNFT({ contract,setMintFalse}) {
 
         try{
 
-            const connection = mainContract.connect(signer);
+        const connection = mainContract.connect(signer);
         const addr = connection.address;
+        const address = await signer.getAddress()
         console.log("MEta is",metadataURI)
-        const result = await mainContract.payToMint(addr, metadataURI, {
+        const result = await mainContract.payToMint(address, metadataURI, {
       
           });
 
