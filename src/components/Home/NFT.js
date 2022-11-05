@@ -24,7 +24,7 @@ function NFT({ imageClick,address, contract }) {
         for (let i = 0; i < result.length; i++) {
             const tokenNum = parseInt(result[i]._hex, 16);
          
-            if(i!=0 && tokenNum==0){
+            if(tokenNum==0){
                 continue;
             }
             console.log("TOk",tokenNum)

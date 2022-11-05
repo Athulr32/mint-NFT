@@ -9,7 +9,7 @@ import Details from './Details'
 
 function App2(){
 
-    const contractAddress = "0xD941c45A2B276e03f097e89A6630888eE92557a6";
+    const contractAddress = "0xb5EFdE40Ac2Ae0c14206643ca5ce370fF9207D41";
 
     const [balance, setBalance] = useState(0);
     const [connect, setConnect] = useState(false)
